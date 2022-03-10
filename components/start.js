@@ -45,19 +45,35 @@ export default class Start extends React.Component {
               <View style={styles.colorContainer}>
                 <Text style={styles.colorText}>Choose a Background Color:</Text>
                 <View style={styles.colorSelectors}>
-                  <TouchableOpacity 
+                  <TouchableOpacity
+                    accessible={true}
+                    accessibilityLabel="black"
+                    accessibilityHint="Choose black for your chat background color."
+                    accessibilityRole="button" 
                     style={styles.color1}
                     onPress={() => this.changeColor(this.colors.option1)}
                   />
                   <TouchableOpacity 
+                    accessible={true}
+                    accessibilityLabel="purple"
+                    accessibilityHint="Choose purple for your chat background color."
+                    accessibilityRole="button"
                     style={styles.color2}
                     onPress={() => this.changeColor(this.colors.option2)}
                   />
                   <TouchableOpacity 
+                    accessible={true}
+                    accessibilityLabel="grey"
+                    accessibilityHint="Choose grey for your chat background color."
+                    accessibilityRole="button"
                     style={styles.color3}
                     onPress={() => this.changeColor(this.colors.option3)}
                   />
                   <TouchableOpacity 
+                    accessible={true}
+                    accessibilityLabel="green"
+                    accessibilityHint="Choose green for your chat background color."
+                    accessibilityRole="button"
                     style={styles.color4}
                     onPress={() => this.changeColor(this.colors.option4)}
                   />

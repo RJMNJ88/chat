@@ -2,6 +2,21 @@ import React from 'react';
 import { StyleSheet, View, TextInput, Text, Button, Alert, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
 import { GiftedChat, Bubble } from 'react-native-gifted-chat'
 
+// Firebase
+const firebase = require('firebase');
+require('firebase/firestore');
+
+// Firebase config
+const firebaseConfig = {
+  apiKey: "AIzaSyBQBypJpmjKldPsTq-jo6SqhvEBG3DH4IU",
+  authDomain: "chat-bea94.firebaseapp.com",
+  projectId: "chat-bea94",
+  storageBucket: "chat-bea94.appspot.com",
+  messagingSenderId: "1095425245015",
+  appId: "1:1095425245015:web:0b4670d2a267829e674812",
+  measurementId: "G-KJ867B935Z"
+};
+
 export default class Chat extends React.Component {
   constructor(props) {
       super(props);
@@ -9,11 +24,21 @@ export default class Chat extends React.Component {
         name: '',
         messages: []
       };
+
+      if (!firebase.apps.length){
+        firebase.initializeApp(firebaseConfig);
+      }
+
+      this.referenceChatMessages = firebase.firestore().collection("messages");
+      this.refMsgsUser = null;
   }
   
   componentDidMount() {
 
     let { name } = this.props.route.params;
+
+    this.referenceChatMessages = firebase.firestore().collection('messages');
+    this.unsubscribe = this.referenceChatMessages.onSnapshot(this.onCollectionUpdate)
 
     this.setState({
       messages: [
@@ -35,12 +60,70 @@ export default class Chat extends React.Component {
         },
       ],
     })
+
+    this.authUnsubscribe = firebase.auth().onAuthStateChanged((user) => {
+      if (!user) {
+        firebase.auth().signInAnonymously();
+      }
+      this.setState({
+        uid: user.uid,
+        messages: [],
+      });
+      this.unsubscribe = this.referenceChatMessages
+        .orderBy("createdAt", "desc")
+        .onSnapshot(this.onCollectionUpdate);
+    });
+  }
+
+  componentWillUnmount() {
+    this.authUnsubscribe();
+    this.unsubscribe();
   }
 
   onSend(messages = []) {
     this.setState(previousState => ({
       messages: GiftedChat.append(previousState.messages, messages),
     }))
+  }
+
+  onCollectionUpdate = (querySnapshot) => {
+    const messages = [];
+    // go through each document
+    querySnapshot.forEach((doc) => {
+      // get the QueryDocumentSnapshot's data
+      let data = doc.data();
+      messages.push({
+        _id: data._id,
+        text: data.text,
+        createdAt: data.createdAt.toDate(),
+        user: data.user,
+      });
+    });
+    this.setState({
+      messages,
+    });
+  };
+
+  addMessage() {
+    const message = this.state.messages[0];
+    this.referenceChatMessages.add({
+      _id: message._id,
+      text: message.text || '',
+      createdAt: message.createdAt,
+      user: this.state.user,
+    });
+  }
+
+  onSend(messages = []) {
+    this.setState(
+      previousState => ({
+        messages: GiftedChat.append(previousState.messages, messages)
+      }),
+      () => {
+        this.saveMessages();
+        this.addMessage();
+      }
+    )
   }
 
   renderBubble(props) {
@@ -96,3 +179,9 @@ const styles = StyleSheet.create({
     color: '#ffffff'
   }
 })
+
+
+
+
+
+// this.referenceChatMessages = firebase.firestore().collection("messages");

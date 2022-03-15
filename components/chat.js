@@ -1,10 +1,15 @@
 import React from 'react';
 import { StyleSheet, View, TextInput, Text, Button, Alert, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
 import { GiftedChat, Bubble } from 'react-native-gifted-chat'
+// import * as firebase from 'firebase';
+// import 'firebase/firestore';
+import firebase from "firebase/compat/app"
+import "firebase/compat/auth"
+import "firebase/compat/firestore"
 
 // Firebase
-const firebase = require('firebase');
-require('firebase/firestore');
+// const firebase = require('firebase');
+// require('firebase/firestore');
 
 // Firebase config
 const firebaseConfig = {
@@ -22,7 +27,13 @@ export default class Chat extends React.Component {
       super(props);
       this.state = {
         name: '',
-        messages: []
+        messages: [],
+        uid: 0,
+        user: {
+          _id: '',
+          name: '',
+          avatar: ''
+        }
       };
 
       if (!firebase.apps.length){
@@ -36,6 +47,7 @@ export default class Chat extends React.Component {
   componentDidMount() {
 
     let { name } = this.props.route.params;
+    this.props.navigation.setOptions({ title: name });
 
     this.referenceChatMessages = firebase.firestore().collection('messages');
     this.unsubscribe = this.referenceChatMessages.onSnapshot(this.onCollectionUpdate)
@@ -68,6 +80,11 @@ export default class Chat extends React.Component {
       this.setState({
         uid: user.uid,
         messages: [],
+        user: {
+          _id: user.uid,
+          name: name,
+          avatar: 'https://placeimg.com/140/140/any',
+        }
       });
       this.unsubscribe = this.referenceChatMessages
         .orderBy("createdAt", "desc")
@@ -96,7 +113,11 @@ export default class Chat extends React.Component {
         _id: data._id,
         text: data.text,
         createdAt: data.createdAt.toDate(),
-        user: data.user,
+        user: {
+					_id: data.user._id,
+					name: data.user.name,
+					avatar: data.user.avatar,
+				},
       });
     });
     this.setState({
@@ -161,8 +182,10 @@ export default class Chat extends React.Component {
             messages={this.state.messages}
             onSend={messages => this.onSend(messages)}
             user={{
-              _id: 1,
-            }}
+							_id: this.state.user._id,
+							name: this.state.name,
+							avatar: this.state.user.avatar,
+						}}
           />
           { Platform.OS === 'android' ? <KeyboardAvoidingView behavior="height" /> : null}
         </View>

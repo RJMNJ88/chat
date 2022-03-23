@@ -1,5 +1,17 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, TextInput, Text, Button, Alert, ScrollView, ImageBackground, Image, TouchableOpacity } from 'react-native';
+import { 
+  StyleSheet, 
+  View, 
+  TextInput, 
+  Text, 
+  Button, 
+  Alert, 
+  ScrollView, 
+  ImageBackground, 
+  Image, 
+  TouchableOpacity, 
+  KeyboardAvoidingView
+} from 'react-native';
 import background from '../assets/background.png';
 import icon2 from '../assets/icon2.svg';
 
@@ -87,7 +99,8 @@ export default class Start extends React.Component {
                 />
               </View>
             </View>
-
+            {/* { Platform.OS === 'android' ? <KeyboardAvoidingView behavior="height" /> : null} */}
+            {/* { Platform.OS === "android" ? ( <KeyboardAvoidingView behavior="height" /> ) : null } */}
           </ImageBackground>
         </View>
       )

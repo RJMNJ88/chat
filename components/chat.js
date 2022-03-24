@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, View, TextInput, Text, Button, Alert, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
 import { GiftedChat, Bubble, InputToolbar } from 'react-native-gifted-chat';
 import AsyncStorage from '@react-native-community/async-storage';
+// import { AsyncStorage } from 'react-native';
 import NetInfo from '@react-native-community/netinfo';
 // import * as firebase from 'firebase';
 // import 'firebase/firestore';

@@ -4,9 +4,8 @@ import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import * as Permissions from "expo-permissions";
 import * as ImagePicker from "expo-image-picker";
 import * as Location from "expo-location";
-import firebase from "firebase/compat/app"
-import "firebase/compat/auth"
-import "firebase/compat/firestore"
+const firebase = require("firebase");
+require("firebase/firestore");
 
 export default class CustomActions extends React.Component {
 
@@ -132,8 +131,8 @@ export default class CustomActions extends React.Component {
 
   render() {
     return (
-      <TouchableOpacity 
-        style={[styles.container]} 
+      <TouchableOpacity
+        style={[styles.container]}
         onPress={this.onActionPress}
         accessible={true}
         accessibilityLabel="More options"

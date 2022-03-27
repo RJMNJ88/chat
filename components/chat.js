@@ -1,13 +1,13 @@
 import React from 'react';
 import { StyleSheet, View, TextInput, Text, Button, Alert, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
 import { GiftedChat, Bubble, InputToolbar } from 'react-native-gifted-chat';
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import NetInfo from '@react-native-community/netinfo';
-import firebase from "firebase/compat/app"
-import "firebase/compat/auth"
-import "firebase/compat/firestore"
 import CustomActions from "./CustomActions";
 import { Constants, MapView, Location, Permissions } from 'expo';
+
+const firebase = require("firebase");
+require("firebase/firestore");
 
 // Firebase config
 const firebaseConfig = {
@@ -122,7 +122,7 @@ export default class Chat extends React.Component {
 
           // Save messages when online
           this.saveMessages();
-          
+
       } else {
         // The user is offline
         this.setState({ isConnected: false });
@@ -168,7 +168,7 @@ export default class Chat extends React.Component {
     });
     this.saveMessages();
   };
-  
+
   addMessage() {
     const message = this.state.messages[0];
     this.referenceChatMessages.add({
@@ -181,7 +181,7 @@ export default class Chat extends React.Component {
       location: message.location || null
     });
   }
-  
+
   onSend(messages = []) {
     this.setState(
       previousState => ({
@@ -193,7 +193,7 @@ export default class Chat extends React.Component {
       }
     );
   }
-    
+
   renderBubble(props) {
     return (
       <Bubble
@@ -241,7 +241,7 @@ export default class Chat extends React.Component {
   }
 
   render() {
-    let name = this.props.route.params.name; 
+    let name = this.props.route.params.name;
     const { bgColor } = this.props.route.params;
 
     return (

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { StyleSheet, View, TextInput, Text, Button, Alert, ScrollView } from 'react-native';
 import Start from './components/start';
 import Chat from './components/chat';
+// import CustomActions from './CustomActions';
 
 import 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';

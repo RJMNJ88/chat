@@ -64,7 +64,7 @@ export default class CustomActions extends React.Component {
           {}
         ).catch((error) => console.log(error));
         const longitude = JSON.stringify(result.coords.longitude);
-        const altitude = JSON.stringify(result.coords.latitude);
+        const latitude = JSON.stringify(result.coords.latitude);
         if (result) {
           this.props.onSend({
             location: {

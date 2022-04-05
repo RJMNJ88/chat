@@ -8,7 +8,8 @@ import NetInfo from '@react-native-community/netinfo';
 // import "firebase/compat/auth"
 // import "firebase/compat/firestore"
 import CustomActions from "./CustomActions";
-import { Constants, MapView, Location, Permissions } from 'expo';
+import { Constants, Location, Permissions } from 'expo';
+import MapView from 'react-native-maps';
 
 const firebase = require("firebase");
 require("firebase/firestore");
@@ -103,7 +104,7 @@ export default class Chat extends React.Component {
           .auth()
           .onAuthStateChanged(async(user) => {
             if(!user) {
-              return await firebase.auth().signInAnonymously;
+              await firebase.auth().signInAnonymously();
             }
 
             // Update user state with currently active user data
@@ -143,7 +144,7 @@ export default class Chat extends React.Component {
       // stop listening to authentication
       this.authUnsubscribe();
       // stop listening for changes
-      this.unsubscribeChatUser();
+      // this.unsubscribeChatUser();
       // this.unsubscribe();
     }
   }
@@ -158,12 +159,12 @@ export default class Chat extends React.Component {
         _id: data._id,
         text: data.text,
         createdAt: data.createdAt.toDate(),
+        image: data.image || null,
+        location: data.location || null,
         user: {
           _id: data.user._id,
 					name: data.user.name,
 					avatar: data.user.avatar,
-          image: data.image || null,
-          location: data.location || null
 				},
       });
     });
@@ -263,7 +264,7 @@ export default class Chat extends React.Component {
             user={{
               uid: this.state.user.uid,
 							_id: this.state.user._id,
-							name: this.state.name,
+							name: this.state.user.name,
 							avatar: this.state.user.avatar,
 						}}
           />
